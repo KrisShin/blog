@@ -1,6 +1,5 @@
 from dotenv import dotenv_values
 
-# 加载 .env 文件中的环境变量
 env = dotenv_values('.env')
 
 PG_HOST = env.get('PG_HOST')
@@ -23,6 +22,9 @@ TORTOISE_ORM = {
         "models": {
             "models": [
                 'aerich.models',
+                'common.models',
+                'user.models',
+                'article.models'
             ],
             "default_connection": "default",
         },
@@ -38,4 +40,4 @@ ACCESS_TOKEN_EXPIRE_DAYS = 7
 HTTP_ADDR = 'http://localhost'
 HTTP_PORT = 9100
 HTTP_SITE = f'{HTTP_ADDR}:{HTTP_PORT}'
-DEFAULT_AVATAR = f'{HTTP_SITE}/static/avatar/default.jpg'
+DEFAULT_AVATAR = f'/static/avatar/default.jpg'

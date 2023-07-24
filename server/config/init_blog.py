@@ -1,8 +1,8 @@
+from tortoise import Tortoise
 from tortoise.contrib.fastapi import register_tortoise
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from redis import asyncio as aioredis
 
 from config.settings import (
     REDIS_DB,
@@ -13,8 +13,8 @@ from config.settings import (
     TORTOISE_ORM,
 )
 
+from user.apis import router as user_router
 
-# from user.apis import router as user_router
 
 # def register_redis(app: FastAPI):
 #     @app.on_event("startup")
@@ -38,12 +38,12 @@ def init_db(app):
 
 
 def register_router(app):
-    # app.include_router(
-    #     user_router,
-    #     tags=['user'],
-    #     responses={404: {'description': 'Not Found'}},
-    #     prefix='/api/user',
-    # )
+    app.include_router(
+        user_router,
+        tags=['user'],
+        responses={404: {'description': 'Not Found'}},
+        prefix='/api/user',
+    )
     # app.include_router(
     #     project_router,
     #     tags=['project'],
@@ -63,7 +63,7 @@ def create_app():
     app = FastAPI()
     origins = [
         "http://localhost",
-        "http://localhost:9100",
+        "http://localhost:19988",
     ]
 
     app.add_middleware(
@@ -72,15 +72,11 @@ def create_app():
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
-        allow_origin_regex=r"http://localhost:\d+",
+        allow_origin_regex=r"http://localhost:.*?",
     )
 
     app.mount("/static", StaticFiles(directory="server/statics"), name="static")
-
     init_db(app)
-
     # register_redis(app)
-
-    register_router(app)
-
+    # register_router(app)
     return app
