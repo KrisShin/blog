@@ -1,11 +1,6 @@
-from tortoise import Tortoise
 from tortoise.contrib.pydantic import pydantic_model_creator
 from pydantic import BaseModel
 from user.models import User
-
-Tortoise.init_models(['user.models'], app_label='user')
-
-UserPydantic = pydantic_model_creator(User, name="User")
 
 
 class UserLoginPydantic(BaseModel):
@@ -13,9 +8,10 @@ class UserLoginPydantic(BaseModel):
     password: str
 
 
+UserPydantic = pydantic_model_creator(User, name="User")
+
 UserInfoPydantic = pydantic_model_creator(
     User,
     name="UserInfo",
-    exclude=('password', 'last_login', 'created_at', 'updated_at', 'disabled', 'author'),
-    computed=('roles',),
+    exclude=('password', 'last_login', 'created_at', 'updated_at', 'disabled'),
 )

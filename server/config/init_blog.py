@@ -1,3 +1,5 @@
+import os
+
 from tortoise import Tortoise
 from tortoise.contrib.fastapi import register_tortoise
 from fastapi import FastAPI
@@ -10,9 +12,9 @@ from config.settings import (
     REDIS_PASS,
     REDIS_PORT,
     REDIS_USER,
-    TORTOISE_ORM,
+    TORTOISE_ORM, BASE_DIR,
 )
-
+from article.apis import router as article_router
 from user.apis import router as user_router
 
 
@@ -32,24 +34,23 @@ def init_db(app):
     register_tortoise(
         app,
         config=TORTOISE_ORM,
-        generate_schemas=True,
         add_exception_handlers=True,
     )
 
 
 def register_router(app):
+    # app.include_router(
+    #     article_router,
+    #     tags=['article'],
+    #     responses={404: {'description': 'Not Found'}},
+    #     prefix='/api/article',
+    # )
     app.include_router(
         user_router,
         tags=['user'],
         responses={404: {'description': 'Not Found'}},
         prefix='/api/user',
     )
-    # app.include_router(
-    #     project_router,
-    #     tags=['project'],
-    #     responses={404: {'description': 'Not Found'}},
-    #     prefix='/api/project',
-    # )
     # app.include_router(
     #     test_router,
     #     tags=['test'],
@@ -61,6 +62,11 @@ def register_router(app):
 
 def create_app():
     app = FastAPI()
+    app.mount(
+        "/static",
+        StaticFiles(directory=os.path.join(BASE_DIR, "statics")),
+        name="static",
+    )
     origins = [
         "http://localhost",
         "http://localhost:19988",
@@ -72,11 +78,8 @@ def create_app():
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
-        allow_origin_regex=r"http://localhost:.*?",
+        expose_headers=["*"],
     )
-
-    app.mount("/static", StaticFiles(directory="server/statics"), name="static")
     init_db(app)
-    # register_redis(app)
-    # register_router(app)
+
     return app

@@ -7,14 +7,14 @@ class User(BaseModel):
     The User model
     """
 
-    username = fields.CharField(max_length=32, null=True)
-    phone = fields.CharField(max_length=13, null=True, unique=False)
+    username = fields.CharField(max_length=32, null=True, index=True)
+    phone = fields.CharField(max_length=13, null=True, unique=False, index=True)
     password = fields.CharField(max_length=256, null=False)
     introduction = fields.CharField(max_length=512, null=True)
     avatar = fields.CharField(max_length=50, null=True)
-    email = fields.CharField(max_length=128, null=True, unique=True)
+    email = fields.CharField(max_length=128, null=True, unique=True, index=True)
     last_login = fields.DatetimeField(null=True, auto_now=True)
-    disabled = fields.BooleanField(default=False)
+    disabled = fields.BooleanField(default=False, index=True)
 
     tags = fields.ManyToManyField(
         'models.Tag',

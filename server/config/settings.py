@@ -1,6 +1,10 @@
+import os
+
 from dotenv import dotenv_values
 
 env = dotenv_values('.env')
+
+DEBUG = env.get('DEBUG')
 
 PG_HOST = env.get('PG_HOST')
 PG_PORT = env.get('PG_PORT')
@@ -14,9 +18,13 @@ REDIS_USER = env.get('REDIS_USER')
 REDIS_PASS = env.get('REDIS_PASS')
 REDIS_DB = env.get('REDIS_DB')
 
+DB_URL = f"postgres://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 TORTOISE_ORM = {
     "connections": {
-        "default": f"postgres://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}"
+        "default": DB_URL
     },
     "apps": {
         "models": {

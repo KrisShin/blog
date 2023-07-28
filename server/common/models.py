@@ -1,7 +1,7 @@
-from tortoise import fields, models
+from tortoise import fields, Model
 
 
-class BaseModel(models.Model):
+class BaseModel(Model):
     """
     The Base model
     """

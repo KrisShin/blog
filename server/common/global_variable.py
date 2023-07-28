@@ -3,7 +3,6 @@ from fastapi import HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordBearer
 from pydantic import BaseModel
 
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 credentials_exception = HTTPException(
@@ -14,7 +13,7 @@ credentials_exception = HTTPException(
 
 
 class PMResponse(BaseModel):
-    """Reseponse standart formatter."""
+    """Response standard formatter."""
 
     code: int
     data: Optional[dict | list | str | int | float | None]
