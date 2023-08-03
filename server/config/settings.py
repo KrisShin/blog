@@ -20,7 +20,7 @@ REDIS_DB = env.get('REDIS_DB')
 
 DB_URL = f"postgres://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}"
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TORTOISE_ORM = {
     "connections": {
@@ -31,8 +31,8 @@ TORTOISE_ORM = {
             "models": [
                 'aerich.models',
                 'common.models',
-                'user.models',
-                'article.models'
+                # 'user.models',
+                # 'article.models'
             ],
             "default_connection": "default",
         },

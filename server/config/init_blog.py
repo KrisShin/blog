@@ -1,6 +1,5 @@
 import os
 
-from tortoise import Tortoise
 from tortoise.contrib.fastapi import register_tortoise
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,8 +13,9 @@ from config.settings import (
     REDIS_USER,
     TORTOISE_ORM, BASE_DIR,
 )
-from article.apis import router as article_router
-from user.apis import router as user_router
+# from article.apis import router as article_router
+# from user.apis import router as user_router
+from common.apis import router as test_router
 
 
 # def register_redis(app: FastAPI):
@@ -45,18 +45,18 @@ def register_router(app):
     #     responses={404: {'description': 'Not Found'}},
     #     prefix='/api/article',
     # )
-    app.include_router(
-        user_router,
-        tags=['user'],
-        responses={404: {'description': 'Not Found'}},
-        prefix='/api/user',
-    )
     # app.include_router(
-    #     test_router,
-    #     tags=['test'],
+    #     user_router,
+    #     tags=['user'],
     #     responses={404: {'description': 'Not Found'}},
-    #     prefix="/api/test",
+    #     prefix='/api/user',
     # )
+    app.include_router(
+        test_router,
+        tags=['test'],
+        responses={404: {'description': 'Not Found'}},
+        prefix="/api/test",
+    )
     ...
 
 
@@ -81,5 +81,7 @@ def create_app():
         expose_headers=["*"],
     )
     init_db(app)
+
+    register_router(app)
 
     return app
