@@ -1,15 +1,16 @@
-from datetime import datetime
-from uuid import UUID
-
 from pydantic import BaseModel
+from tortoise.contrib.pydantic import pydantic_model_creator
+
+from article.models import BlogArticle
 
 
-class ArticleDetailPydantic(BaseModel):
+class ArticleCreatePydantic(BaseModel):
     title: str
-    context: str
-    created_at: datetime
-    author_id: UUID
+    content: str
 
-    @property
-    def author(self):
-        return self.author.username
+
+ArticleDetailPydantic = pydantic_model_creator(
+    BlogArticle,
+    include=('id', 'title', 'content'),
+    computed=('author_name',)
+)

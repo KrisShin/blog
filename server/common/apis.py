@@ -2,8 +2,6 @@ from fastapi import APIRouter, status
 
 from common.global_variable import PMResponse
 
-from common.pydantics import Tag_Pydantic
-
 router = APIRouter()
 
 

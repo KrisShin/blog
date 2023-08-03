@@ -1,9 +1,6 @@
-from tortoise import Tortoise
 from tortoise.contrib.pydantic import pydantic_model_creator
 from pydantic import BaseModel
 from user.models import User
-
-Tortoise.init_models(['user.models'], 'models')
 
 
 class UserLoginPydantic(BaseModel):

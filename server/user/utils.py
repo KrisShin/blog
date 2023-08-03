@@ -4,6 +4,8 @@ from typing import Optional
 from uuid import UUID
 from fastapi import Depends, HTTPException
 from jose import jwt, JWTError
+
+from common.utils import get_cache
 from user.pydantics import UserPydantic
 from common.global_variable import oauth2_scheme, credentials_exception
 from user.models import User

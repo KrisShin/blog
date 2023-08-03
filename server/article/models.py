@@ -20,9 +20,11 @@ class BlogArticle(BaseModel):
         on_delete=fields.SET_NULL,
     )
 
-    @property
-    def introduction(self):
+    def introduction(self) -> str:
         return self.content[:20]
+
+    def author_name(self) -> str:
+        return self.author.username
 
     class Meta:
         table = 'tb_article'
