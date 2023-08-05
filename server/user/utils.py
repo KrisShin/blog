@@ -2,7 +2,7 @@ from passlib.context import CryptContext
 from datetime import timedelta, datetime
 from typing import Optional
 from uuid import UUID
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from jose import jwt, JWTError
 
 from common.utils import get_cache
@@ -37,11 +37,11 @@ def create_access_token(user_id: UUID, expires_delta: Optional[timedelta] = None
     return encoded_jwt
 
 
-async def validate_token(token: str = Depends(oauth2_scheme)) -> str | bool:
+async def validate_token(request: Request, token: str = Depends(oauth2_scheme)) -> str | bool:
     """if validate return user_id otherwise return False"""
-    # user_id = await get_cache(token)
-    # if not user_id:
-    #     return False
+    user_id = await get_cache(token)
+    if not user_id:
+        return False
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: str = payload.get("user_id")
