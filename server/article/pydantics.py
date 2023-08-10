@@ -12,5 +12,5 @@ class ArticleCreatePydantic(BaseModel):
 ArticleDetailPydantic = pydantic_model_creator(
     BlogArticle,
     include=('id', 'title', 'content'),
-    computed=('author_name',)
+    computed=('author_info',)
 )

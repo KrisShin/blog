@@ -1,25 +1,22 @@
 import os
 
-import redis.asyncio as redis
-from tortoise import Tortoise
+from redis import asyncio
 from tortoise.contrib.fastapi import register_tortoise
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from config.settings import REDIS_URL, TORTOISE_ORM, BASE_DIR
-from article.apis import router as article_router
-from user.apis import router as user_router
-from common.apis import router as test_router
+from config.settings import TORTOISE_ORM, BASE_DIR, REDIS_URL
 
 
 def register_redis(app: FastAPI):
     """
     register redis to app
     """
+
     @app.on_event("startup")
     async def startup_event():
-        app.redis = await redis.from_url(REDIS_URL, decode_responses=True, encoding="utf8", )
+        app.redis = await asyncio.from_url(REDIS_URL, decode_responses=True, encoding="utf8", )
 
     # @app.on_event("shutdown")
     # async def shutdown_event():
@@ -34,32 +31,6 @@ def init_db(app):
         app,
         config=TORTOISE_ORM,
         add_exception_handlers=True,
-    )
-
-
-def register_router(app):
-    """
-    register router to app
-    """
-    Tortoise.init_models(['common.models', 'user.models', 'article.models'], 'models')
-
-    app.include_router(
-        article_router,
-        tags=['article'],
-        responses={404: {'description': 'Not Found'}},
-        prefix='/api/article',
-    )
-    app.include_router(
-        user_router,
-        tags=['user'],
-        responses={404: {'description': 'Not Found'}},
-        prefix='/api/user',
-    )
-    app.include_router(
-        test_router,
-        tags=['test'],
-        responses={404: {'description': 'Not Found'}},
-        prefix="/api/test",
     )
 
 
@@ -83,10 +54,8 @@ def create_app():
         allow_headers=["*"],
         expose_headers=["*"],
     )
-    init_db(app)
-
-    register_router(app)
-
-    register_redis(app)
 
     return app
+
+
+app = create_app()

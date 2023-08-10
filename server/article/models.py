@@ -1,5 +1,6 @@
 from tortoise import fields
 from common.models import BaseModel
+from user.pydantics import UserInfoPydantic
 
 
 class BlogArticle(BaseModel):
@@ -23,8 +24,9 @@ class BlogArticle(BaseModel):
     def introduction(self) -> str:
         return self.content[:20]
 
-    def author_name(self) -> str:
-        return self.author.username
+    def author_info(self) -> UserInfoPydantic:
+        print(self.author)
+        return UserInfoPydantic.from_orm(self.author)
 
     class Meta:
         table = 'tb_article'
