@@ -48,3 +48,8 @@ async def post_new_article(
 ):
     await BlogArticle.create(**article.model_dump(), author=user)
     return {'success'}
+
+
+@router.post('/comment/{article_id}/')
+async def post_new_comment():
+    ...

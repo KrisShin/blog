@@ -20,6 +20,9 @@ class Tag(BaseModel):
     """
 
     name = fields.CharField(max_length=128, null=False, unique=True, index=True)
+    user = fields.ForeignKeyField(
+        'models.User', related_name='created_tags', null=True, on_delete=fields.SET_NULL
+    )
 
     class Meta:
         table = "tb_tag"

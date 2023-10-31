@@ -8,7 +8,7 @@ from article.models import BlogArticle, Comment
 class ArticleCreatePydantic(BaseModel):
     title: str
     content: str
-    tag: list
+    tag: list[str]
 
 
 ArticleDetailPydantic = pydantic_model_creator(
