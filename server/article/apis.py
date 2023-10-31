@@ -7,6 +7,7 @@ from article.pydantics import (
     CommentPydantic,
 )
 from common.exceptions import BadRequest
+from common.models import Tag
 from common.pydantics import TagInPydantic
 from common.utils import validate_uuid
 from user.pydantics import UserInfoPydantic
@@ -45,8 +46,11 @@ async def get_article_detail(article_id: str):
 @router.post('/post-article/')
 async def post_new_article(
     article: ArticleCreatePydantic, user=Depends(get_current_user_model)
-):
-    await BlogArticle.create(**article.model_dump(), author=user)
+): 
+    params = article.model_dump()
+    tags = await Tag.filter(name__in=params.pop('tags'))
+    blog = await BlogArticle.create(**params, author=user)
+    [await blog.tags.add(tag) for tag in tags]
     return {'success'}
 
 
