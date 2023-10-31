@@ -1,5 +1,5 @@
-from datetime import datetime
-from pydantic import BaseModel, field_serializer, Field
+from uuid import UUID
+from pydantic import BaseModel
 from tortoise.contrib.pydantic import pydantic_model_creator
 
 from article.models import BlogArticle, Comment
@@ -8,7 +8,12 @@ from article.models import BlogArticle, Comment
 class ArticleCreatePydantic(BaseModel):
     title: str
     content: str
-    tag: list
+    tags: list[str]
+
+
+class CommentCreatePydantic(BaseModel):
+    context: str
+    article_id: UUID | str
 
 
 ArticleDetailPydantic = pydantic_model_creator(
