@@ -1,21 +1,23 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
+from common.models import Tag
+from common.pydantics import TagInPydantic
 
-from common.utils import get_cache, set_cache
 
 router = APIRouter()
 
 
-@router.get('/get/')
-def test_get_method():
-    return {'code': status.HTTP_200_OK, 'data': {'message': 'test get method OK.'}}
+@router.get('/list/{query}')
+async def get_tag_list(query: str = None):
+    """
+    get or query tag list
+    """
+    return [
+        TagInPydantic.model_validate(tag)
+        for tag in await Tag.filter(name__icontains=query)
+    ]
 
 
-@router.get('/redis/get/{key}')
-async def test_redis_get(key: str):
-    return await get_cache(key)
-
-
-@router.get('/redis/set/{key}')
-async def test_redis_set(key: str, value: str):
-    await set_cache(key, value)
-    return await get_cache(key)
+@router.post('/create/')
+async def create_tag(tag: TagInPydantic):
+    Tag.create(**tag.dict(exclude_unset=True))
+    return {'status': 'ok'}

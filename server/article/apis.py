@@ -7,7 +7,7 @@ from article.pydantics import (
     CommentPydantic,
 )
 from common.exceptions import BadRequest
-from common.pydantics import TagPydantic
+from common.pydantics import TagInPydantic
 from common.utils import validate_uuid
 from user.pydantics import UserInfoPydantic
 from user.utils import get_current_user_model
@@ -32,7 +32,7 @@ async def get_article_detail(article_id: str):
         await article_obj.author
     ).model_dump()
     resp_data['tags'] = [
-        TagPydantic.model_validate(tag) for tag in await article_obj.tags.all()
+        TagInPydantic.model_validate(tag) for tag in await article_obj.tags.all()
     ]
     resp_data['comments'] = []
     for comment in await article_obj.comments.all():
