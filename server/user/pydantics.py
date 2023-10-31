@@ -15,7 +15,7 @@ UserPydantic = pydantic_model_creator(User, name="UserPydantic")
 UserInfoPydantic = pydantic_model_creator(
     User,
     name="UserInfo",
-    exclude=('password', 'last_login', 'created_at', 'updated_at', 'disabled'),
+    exclude=('password', 'last_login', 'created_at', 'updated_at', 'disabled', 'phone'),
 )
 
 

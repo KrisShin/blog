@@ -1,6 +1,7 @@
 import json
 
 from datetime import timedelta
+from uuid import UUID
 
 from config.init_blog import app
 
@@ -29,3 +30,10 @@ async def get_cache(key: str) -> str:
 
 async def del_cache(key: str) -> str:
     return await app.redis.delete('blog.cache.' + key)
+
+
+def validate_uuid(uuid: str | UUID) -> UUID:
+    try:
+        return UUID(uuid)
+    except ValueError:
+        raise ValueError(f'{uuid} is not a valid UUID')

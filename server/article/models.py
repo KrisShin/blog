@@ -1,6 +1,5 @@
 from tortoise import fields
 from common.models import BaseModel
-from user.pydantics import UserInfoPydantic
 
 
 class BlogArticle(BaseModel):
@@ -10,7 +9,7 @@ class BlogArticle(BaseModel):
         'models.User',
         related_name='author_articles',
         null=True,
-        on_delete=fields.SET_NULL
+        on_delete=fields.SET_NULL,
     )
 
     tags = fields.ManyToManyField(
@@ -21,26 +20,19 @@ class BlogArticle(BaseModel):
         on_delete=fields.SET_NULL,
     )
 
-    def introduction(self) -> str:
-        return self.content[:20]
-
-    def author_info(self) -> UserInfoPydantic:
-        print(self.author)
-        return UserInfoPydantic.from_orm(self.author)
-
     class Meta:
         table = 'tb_article'
+        ordering = ['-created_at']
+        from_attrbutes = True
 
 
 class Comment(BaseModel):
     article = fields.ForeignKeyField('models.BlogArticle', related_name='comments')
     user = fields.ForeignKeyField(
-        'models.User',
-        related_name='comments',
-        null=True,
-        on_delete=fields.SET_NULL
+        'models.User', related_name='comments', null=True, on_delete=fields.SET_NULL
     )
     context = fields.TextField()
 
     class Meta:
         table = 'tb_comment'
+        from_attributes = True
