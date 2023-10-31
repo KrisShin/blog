@@ -23,7 +23,8 @@ class Tag(BaseModel):
 
     class Meta:
         table = "tb_tag"
+        from_attributes = True
+        ordering = ["name"]
 
-    # @property
     def key(self) -> str:
         return self.name

@@ -13,3 +13,11 @@ class BadRequest(HTTPException):
 
     def __init__(self, detail):
         self.detail = detail
+
+
+class AuthenticationFailed(HTTPException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    detail = ''
+
+    def __init__(self, detail):
+        self.detail = detail
