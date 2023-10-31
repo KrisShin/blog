@@ -1,10 +1,12 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends
 
-from article.models import BlogArticle
+from article.models import BlogArticle, Comment
 from article.pydantics import (
     ArticleCreatePydantic,
     ArticleDetailPydantic,
     CommentPydantic,
+    CommentCreatePydantic,
 )
 from common.exceptions import BadRequest
 from common.models import Tag
@@ -37,16 +39,16 @@ async def get_article_detail(article_id: str):
     ]
     resp_data['comments'] = []
     for comment in await article_obj.comments.all():
-        comment_data = CommentPydantic.model_validate(comment)
+        comment_data = CommentPydantic.model_validate(comment).model_dump()
         comment_data['user'] = UserInfoPydantic.model_validate(await comment.user)
         resp_data['comments'].append(comment_data)
     return resp_data
 
 
-@router.post('/post-article/')
+@router.post('/')
 async def post_new_article(
     article: ArticleCreatePydantic, user=Depends(get_current_user_model)
-): 
+):
     params = article.model_dump()
     tags = await Tag.filter(name__in=params.pop('tags'))
     blog = await BlogArticle.create(**params, author=user)
@@ -54,6 +56,38 @@ async def post_new_article(
     return {'success'}
 
 
-@router.post('/comment/{article_id}/')
-async def post_new_comment():
-    ...
+@router.put('/{article_id}/')
+async def edit_article(
+    article: ArticleCreatePydantic, user=Depends(get_current_user_model)
+):
+    # TODO
+    return {'success'}
+
+
+@router.delete('/{article_id}/')
+async def delete_article(
+    article: ArticleCreatePydantic, user=Depends(get_current_user_model)
+):
+    # TODO
+    return {'success'}
+
+
+@router.post('/comment/')
+async def post_new_comment(
+    comment: CommentCreatePydantic, user=Depends(get_current_user_model)
+):
+    params = comment.model_dump()
+    article = await BlogArticle.get_or_none(id=params.pop('article_id'))
+    if not article:
+        raise BadRequest('Article not exist.')
+    comment = await Comment.create(**params, article=article, user=user)
+    return CommentPydantic.model_validate(comment)
+
+
+@router.delete('/comment/{comment_id}/')
+async def delete_comment(comment_id: str | UUID, user=Depends(get_current_user_model)):
+    comment = await Comment.get_or_none(id=comment_id, user=user)
+    if not comment:
+        raise BadRequest('Comment not exist.')
+    await comment.delete()
+    return {'success'}

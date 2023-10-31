@@ -13,7 +13,7 @@ class ArticleCreatePydantic(BaseModel):
 
 class CommentCreatePydantic(BaseModel):
     context: str
-    aritcle_id: UUID | str
+    article_id: UUID | str
 
 
 ArticleDetailPydantic = pydantic_model_creator(
