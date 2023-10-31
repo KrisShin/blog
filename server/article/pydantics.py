@@ -11,6 +11,7 @@ from user.pydantics import UserInfoPydantic
 class ArticleCreatePydantic(BaseModel):
     title: str
     content: str
+    tag: list
 
 
 class ArticleListItemPydantic(BaseModel):
