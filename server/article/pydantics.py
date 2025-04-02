@@ -1,6 +1,7 @@
 from uuid import UUID
 from pydantic import BaseModel
-from tortoise.contrib.pydantic import pydantic_model_creator
+from datetime import datetime
+from typing import List, Any
 
 from article.models import BlogArticle, Comment
 
@@ -16,13 +17,17 @@ class CommentCreatePydantic(BaseModel):
     article_id: UUID | str
 
 
-ArticleDetailPydantic = pydantic_model_creator(
-    BlogArticle,
-    include=('id', 'title', 'content', 'tags', 'author', 'created_at'),
-)
+class ArticleDetailPydantic(BaseModel):
+    id: int
+    title: str
+    content: str
+    tags: Any
+    author: Any
+    created_at: datetime
 
 
-CommentPydantic = pydantic_model_creator(
-    Comment,
-    include=('id', 'user', 'context', 'created_at'),
-)
+class CommentPydantic(BaseModel):
+    id: int
+    user: Any
+    context: str
+    created_at: datetime

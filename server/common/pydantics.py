@@ -1,8 +1,5 @@
-from tortoise.contrib.pydantic import pydantic_model_creator
-
-from common.models import Tag
+from pydantic import BaseModel
 
 
-TagInPydantic = pydantic_model_creator(
-    Tag, name="TagIn", exclude_readonly=True, include={"name"}
-)
+class TagInPydantic(BaseModel):
+    name: str

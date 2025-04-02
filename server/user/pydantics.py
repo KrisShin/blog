@@ -3,6 +3,7 @@ from typing import Any
 from tortoise.contrib.pydantic import pydantic_model_creator
 from pydantic import BaseModel
 from user.models import User
+from datetime import datetime
 
 
 class UserLoginPydantic(BaseModel):
@@ -10,13 +11,23 @@ class UserLoginPydantic(BaseModel):
     password: str
 
 
-UserPydantic = pydantic_model_creator(User, name="UserPydantic")
+class UserPydantic(BaseModel):
+    username: str
+    phone: str
+    introduction: str
+    avatar: str
+    email: str
+    last_login: datetime
+    disabled: bool
+    tags: Any
 
-UserInfoPydantic = pydantic_model_creator(
-    User,
-    name="UserInfo",
-    exclude=('password', 'last_login', 'created_at', 'updated_at', 'disabled', 'phone'),
-)
+
+class UserInfoPydantic(BaseModel):
+    username: str
+    introduction: str
+    avatar: str
+    email: str
+    tags: Any
 
 
 class TokenPydantic(BaseModel):
